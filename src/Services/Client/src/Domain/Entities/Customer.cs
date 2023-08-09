@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Client.Domain.Entities
 {
-    public class ClientEntity : BaseEntity
+    public class Customer : BaseEntity
     {
-
+        public string  Name { get; set; } 
     }
 }
