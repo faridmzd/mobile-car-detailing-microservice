@@ -1,4 +1,5 @@
-﻿using Client.Application.Common.Interfaces;
+﻿using AutoMapper;
+using Client.Application.Common.Interfaces;
 using Client.Application.Customers.Responses;
 using Client.Domain.Entities;
 using MediatR;
@@ -15,33 +16,34 @@ namespace Client.Application.Customers.Commands
     public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, CreateCustomerResponse>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CreateCustomerCommandHandler(IApplicationDbContext context)
+        public CreateCustomerCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<CreateCustomerResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-            Customer newCustomer = new()
-            {
-                Id = new Guid(),
-                Name = request.Name,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+            
 
-            };
+            var newCustomer = _mapper.Map<Customer>(request);
 
+            //TODO fix it, adding params manually
+
+            newCustomer.Id = new Guid();
+            newCustomer.CreatedAt = DateTime.UtcNow;
+            newCustomer.UpdatedAt = DateTime.UtcNow;
+
+          
             _context.Customers.Add(newCustomer);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new CreateCustomerResponse(
-                newCustomer.Id, 
-                newCustomer.Name,
-                newCustomer.CreatedAt, 
-                newCustomer.UpdatedAt);
-           
+            
+
+            return _mapper.Map<CreateCustomerResponse>(newCustomer);
         }
     }
 }
