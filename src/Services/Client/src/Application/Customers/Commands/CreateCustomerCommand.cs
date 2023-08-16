@@ -4,6 +4,7 @@ using Client.Application.Common.Interfaces;
 using Client.Application.Customers.Responses;
 using Client.Domain.Entities;
 using FluentResults;
+using FluentValidation;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,16 @@ namespace Client.Application.Customers.Commands
             
 
             return _mapper.Map<CreateCustomerCommandResponse>(newCustomer);
+        }
+    }
+
+    public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
+    {
+        public CreateCustomerCommandValidator()
+        {
+            RuleFor(v => v.Name)
+                .MaximumLength(200)
+                .NotEmpty();
         }
     }
 }
