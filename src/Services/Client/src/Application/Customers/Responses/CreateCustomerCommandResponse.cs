@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Client.Application.Customers.Responses
 {
-    public record CreateCustomerResponse(Guid Id, string Name, DateTime CreatedAt, DateTime UpdatedAt);
+    public record CreateCustomerCommandResponse(Guid Id, string Name, DateTime CreatedAt, DateTime UpdatedAt);
     
 }
