@@ -13,7 +13,7 @@ namespace Client.Application.Common.Mappings
     {
         public DomainToResponseProfile() 
         {
-            CreateMap<Customer, CreateCustomerResponse>();
+            CreateMap<Customer, CreateCustomerCommandResponse>();
         }
     }
 }
