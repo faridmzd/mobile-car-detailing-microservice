@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Client.API.Common.Contracts
 {
@@ -13,19 +14,20 @@ namespace Client.API.Common.Contracts
 
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
 
-        public IActionResult Problem(List<IError> errors)
+        public  IActionResult Problem(List<IError> errors)
         {
             var firstError = errors.First();
-          
-                return (IActionResult)Results.Problem(
 
-                    statusCode: firstError.HasMetadataKey(HttpContextItemKeys.StatusCode)
-                    ? (int)(firstError.Metadata[HttpContextItemKeys.StatusCode]) : (int)HttpStatusCode.Conflict,
+            return base.Problem(
+                 statusCode: firstError.HasMetadataKey(HttpContextItemKeys.StatusCode)
+                 ? (int)(firstError.Metadata[HttpContextItemKeys.StatusCode]) : (int)HttpStatusCode.Conflict,
+                 title: firstError.Message);
 
-                    title: firstError.Message
-                    );
 
-            
+
+
+
+
         }
     }
 }
