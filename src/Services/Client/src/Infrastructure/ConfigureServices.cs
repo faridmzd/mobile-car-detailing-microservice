@@ -9,8 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Infrastructure
-{
+namespace Client.Infrastructure;
+
     public static class ConfigureServices
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
@@ -26,4 +26,4 @@ namespace Client.Infrastructure
 
 
     }
-}
+

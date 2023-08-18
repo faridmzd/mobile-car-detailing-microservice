@@ -4,7 +4,7 @@ using System.Reflection;
 using FluentValidation;
 
 
-namespace Microsoft.Extensions.DependencyInjection555;
+namespace Client.Application;
 
 
     public static class ConfigureServices
