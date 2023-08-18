@@ -14,6 +14,8 @@ namespace Client.Application.Common.Mappings
         public DomainToResponseProfile() 
         {
             CreateMap<Customer, CreateCustomerCommandResponse>();
+
+            CreateMap<Customer, GetCustomerQueryResponse>();
         }
     }
 }

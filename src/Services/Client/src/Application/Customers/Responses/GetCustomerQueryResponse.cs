@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Client.Application.Customers.Responses
 {
-    public record GetCustomerResponse(Guid Id, string Name);
+    public record GetCustomerQueryResponse(Guid Id, string Name, string PassportNo, DateTime CreatedAt, DateTime UpdatedAt);
     
 }

@@ -35,7 +35,7 @@ namespace Client.Application.Customers.Commands
 
            var customer =  _context.Customers.FirstOrDefault(customer => customer.PassportNo == request.PassportNo);
 
-            if (customer is not null) { return Result.Fail<CreateCustomerCommandResponse>(new DuplicatePassportNoError(customer.Id)); }
+            if (customer is not null) { return Result.Fail<CreateCustomerCommandResponse>(new DuplicatePassportNoError(customer.PassportNo)); }
 
             // else create customer
 
