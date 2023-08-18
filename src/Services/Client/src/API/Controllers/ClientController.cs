@@ -1,5 +1,6 @@
 ﻿using Client.API.Common.Contracts;
 using Client.Application.Customers.Commands;
+using Client.Application.Customers.Queries;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,12 @@ namespace Client.API.Controllers
     public class ClientController : ApiControllerBase
     {
         [HttpGet(ApiRoutes.Customer.GetAll)]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetAll()
         {
-            return new string[] { "value1", "value2" };
+            var result = await Mediator.Send(new GetCustomersQuery());
+
+            return result.Any() ? Ok(result) : NoContent();
+
         }
 
         [HttpGet(ApiRoutes.Customer.Get)]
@@ -37,6 +41,8 @@ namespace Client.API.Controllers
         [HttpPut(ApiRoutes.Customer.Update)]
         public void Put(int id, [FromBody] string value)
         {
+
+
         }
 
         [HttpDelete(ApiRoutes.Customer.Delete)]
