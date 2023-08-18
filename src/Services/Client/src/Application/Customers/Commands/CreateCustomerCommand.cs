@@ -35,18 +35,11 @@ namespace Client.Application.Customers.Commands
 
            var customer =  _context.Customers.FirstOrDefault(customer => customer.PassportNo == request.PassportNo);
 
-            if (customer == null) { return Result.Fail<CreateCustomerCommandResponse>(new DuplicatePassportNoError()); }
+            if (customer is not null) { return Result.Fail<CreateCustomerCommandResponse>(new DuplicatePassportNoError(customer.Id)); }
 
             // else create customer
 
             var newCustomer = _mapper.Map<Customer>(request);
-
-            //TODO fix it, adding params manually
-
-            newCustomer.Id = new Guid();
-            newCustomer.CreatedAt = DateTime.UtcNow;
-            newCustomer.UpdatedAt = DateTime.UtcNow;
-
           
             _context.Customers.Add(newCustomer);
 
@@ -64,7 +57,13 @@ namespace Client.Application.Customers.Commands
         {
             RuleFor(v => v.Name)
                 .MaximumLength(200)
-                .NotEmpty();
+                .NotEmpty()
+                .NotNull();
+
+            RuleFor(v => v.PassportNo)
+                .MaximumLength(9)
+                .NotEmpty()
+                .NotNull();
         }
     }
 }

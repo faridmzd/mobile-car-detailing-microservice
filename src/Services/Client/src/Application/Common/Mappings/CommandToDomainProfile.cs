@@ -13,8 +13,10 @@ namespace Client.Application.Common.Mappings
     {
         public CommandToDomainProfile()
         {
-            CreateMap<CreateCustomerCommand, Customer>();
-
+            CreateMap<CreateCustomerCommand, Customer>()
+                .ForMember(dest => dest.Id, m => m.MapFrom(_ => Guid.NewGuid()))
+                .ForMember(dest => dest.CreatedAt, m => m.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdatedAt, m => m.MapFrom(_ => DateTime.UtcNow));
         }
     }
 }
