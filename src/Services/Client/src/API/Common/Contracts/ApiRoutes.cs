@@ -6,7 +6,7 @@
         private const string Version = "v1";
         private const string Base = Root + "/" + Version;
 
-        public static class Note
+        public static class Customer
         {
             public const string GetAll = Base + "/customer";
             public const string Get = Base + "/customer/{id:Guid}";
