@@ -11,9 +11,9 @@ namespace Client.Application.Common.Errors
 {
    public class DuplicatePassportNoError : Error
     {
-        public DuplicatePassportNoError(Guid Id)
+        public DuplicatePassportNoError(object Id)
         {
-            Message = $"Client with passport number : {Id} already exists";
+            Message = $"Client with passport number {Id} already exists";
                 
             WithMetadata(HttpContextItemKeys.StatusCode, HttpStatusCode.Forbidden);
         }
