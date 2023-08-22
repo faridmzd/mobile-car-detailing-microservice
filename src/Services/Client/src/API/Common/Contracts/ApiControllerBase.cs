@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Client.Application.Common.Errors;
 
-namespace Client.API.Common.Contracts
+namespace Client.API.Controllers
 {
+    [Route("")]
+    [ApiController]
     public abstract class ApiControllerBase : ControllerBase
     {
         private ISender? _mediator;
@@ -16,18 +19,17 @@ namespace Client.API.Common.Contracts
 
         public  IActionResult Problem(List<IError> errors)
         {
-            var firstError = errors.First();
+            var firstError =  errors.First() as ErrorBase;
 
-            return base.Problem(
-                 statusCode: firstError.HasMetadataKey(HttpContextItemKeys.StatusCode)
-                 ? (int)(firstError.Metadata[HttpContextItemKeys.StatusCode]) : (int)HttpStatusCode.Conflict,
-                 title: firstError.Message);
+            ArgumentNullException.ThrowIfNull(firstError);
 
-
-
-
-
+                return new ObjectResult(new ProblemDetails
+                {
+                    Status = firstError.StatusCode,
+                    Extensions = { { nameof(firstError.Metadata), firstError.Metadata } }
+                });
 
         }
+
     }
 }

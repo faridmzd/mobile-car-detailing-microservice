@@ -27,19 +27,19 @@ namespace Client.Application.Customers.Commands
             _mapper = mapper;
         }
 
-        public async Task<Result<CreateCustomerCommandResponse>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CreateCustomerCommandResponse>> Handle(CreateCustomerCommand command, CancellationToken cancellationToken)
         {
 
             //checking if customer with given PassportNo already exists
 
 
-           var customer =  _context.Customers.FirstOrDefault(customer => customer.PassportNo == request.PassportNo);
+           var customer =  _context.Customers.FirstOrDefault(customer => customer.PassportNo == command.PassportNo);
 
             if (customer is not null) { return Result.Fail<CreateCustomerCommandResponse>(new DuplicatePassportNoError(customer.PassportNo)); }
 
             // else create customer
 
-            var newCustomer = _mapper.Map<Customer>(request);
+            var newCustomer = _mapper.Map<Customer>(command);
           
             _context.Customers.Add(newCustomer);
 
@@ -47,7 +47,7 @@ namespace Client.Application.Customers.Commands
 
             
 
-            return _mapper.Map<CreateCustomerCommandResponse>(newCustomer);
+            return  Result.Ok(_mapper.Map<CreateCustomerCommandResponse>(newCustomer));
         }
     }
 
@@ -57,11 +57,11 @@ namespace Client.Application.Customers.Commands
         {
             RuleFor(v => v.Name)
                 .MaximumLength(200)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Name can't be empty!")
                 .NotNull();
 
             RuleFor(v => v.PassportNo)
-                .MaximumLength(9)
+                .MinimumLength(9)
                 .NotEmpty()
                 .NotNull();
         }
