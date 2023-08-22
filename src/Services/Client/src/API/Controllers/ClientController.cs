@@ -2,6 +2,7 @@
 using Client.Application.Customers.Commands;
 using Client.Application.Customers.Queries;
 using FluentResults;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Client.API.Controllers
@@ -19,14 +20,42 @@ namespace Client.API.Controllers
         }
 
         [HttpGet(ApiRoutes.Customer.Get)]
-        public string Get(int id)
+        public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            return "value";
+            var result = await Mediator.Send(new GetCustomerQuery(id));
+
+            return result switch
+            {
+                { IsSuccess: true } => Ok(result.Value),
+                { IsFailed: true } => Problem(result.Errors),
+                _ => null!
+            };
+
         }
 
         [HttpPost(ApiRoutes.Customer.Add)]
         public async Task<IActionResult> Post([FromBody] CreateCustomerCommand command)
         {
+
+            var result = await Mediator.Send(command);
+
+
+
+
+            return result switch
+            {
+                { IsSuccess: true } => Ok(result.Value),
+                { IsFailed: true } => Problem(result.Errors),
+                _ => null!
+            };
+
+        }
+
+        [HttpPut(ApiRoutes.Customer.Update)]
+        public async Task<IActionResult> Put([FromRoute] Guid id, [FromBody] UpdateCustomerCommandRequest request)
+        {
+            var command = new UpdateCustomerCommand(id, request.PassportNo, request.Name);
+
             var result = await Mediator.Send(command);
 
             return result switch
@@ -34,20 +63,21 @@ namespace Client.API.Controllers
                 { IsSuccess: true } => Ok(result.Value),
                 { IsFailed: true } => Problem(result.Errors),
                 _ => null!
-            }; 
-
-        }
-
-        [HttpPut(ApiRoutes.Customer.Update)]
-        public void Put(int id, [FromBody] string value)
-        {
-
-
+            };
         }
 
         [HttpDelete(ApiRoutes.Customer.Delete)]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
+            var result = await Mediator.Send(new DeleteCustomerCommand(id)); ;
+
+            return result switch
+            {
+                { IsSuccess: true } => NoContent(),
+                { IsFailed: true } => Problem(result.Errors),
+                _ => null!
+            };
+
         }
     }
 }
