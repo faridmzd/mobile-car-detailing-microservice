@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Client.Application.Common.Errors
 {
-   public class DuplicatePassportNoError : Error
+   public sealed class DuplicatePassportNoError : ErrorBase
     {
-        public DuplicatePassportNoError(object Id)
+        public DuplicatePassportNoError(object Id) : base((int)HttpStatusCode.Forbidden)
         {
             Message = $"Client with passport number {Id} already exists";
                 
